@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS from flask_cors
+from flask_cors import CORS
 import joblib
 import pandas as pd
+import os
 
 app = Flask(__name__)
-CORS(app)  # Apply CORS to your Flask app
+CORS(app)
 
 # Load the trained model, scaler, and feature names
 model = joblib.load('diabetes_model.pkl')
@@ -42,4 +43,6 @@ def predict():
     return jsonify({'prediction': result})
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    # Get the port from environment variables, default to 5000 if not set
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)
